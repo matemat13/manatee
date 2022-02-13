@@ -2,6 +2,8 @@ cap_squash = 0.25;
 body_diameter = 37;
 body_bottom_diameter = 34;
 body_height = 35;
+num_legs = 6;
+num_doors = 5; // should be lower than the number of legs
 
 thrusters_housing_diameter = 25;
 thrusters_housing_height = 2;
@@ -202,11 +204,10 @@ module hull()
     };
     
     // leg mounts
-    n_legs = 5;
     H_legmount = H/7;
     R_legmount = R/3;
-    for (it = [1: n_legs])
-        rotate([0, 0, it*360/n_legs])
+    for (it = [1: num_legs])
+        rotate([0, 0, it*360/num_legs])
         translate([R-1.05*R_legmount, 0, H/4])
         leg_attachment(H_legmount, R_legmount, $fn=50);
 }
@@ -252,9 +253,10 @@ module thruster(h, r)
     }
 }
 
+/// MAIN
 // for reference
-translate([100, 0, 15])
-import("glt-3n-6.stl");
+//translate([100, 0, 15])
+//import("glt-3n-6.stl");
 
 // main hull
 difference()
@@ -263,17 +265,17 @@ difference()
     
     tri_cut_w = 2*PI*R/15;
     tri_cut_d = R/25;
-    for (it = [1: 10])
-    rotate([0, 0, it*360/10])
-    translate([R_bottom-tri_cut_d, 0, 0])
-    rotate([98, 0, 90])
-    linear_extrude(2*tri_cut_d, scale=1.2)
-    polygon(points=[
-        [-tri_cut_w/2, 0],
-        [tri_cut_w/2, 0],
-        [0, 1.3*tri_cut_w],
-    ]
-    );
+    for (it = [1 : 2*num_legs])
+        rotate([0, 0, it*360/num_legs/2])
+        translate([R_bottom-tri_cut_d, 0, 0])
+        rotate([98, 0, 90])
+        linear_extrude(2*tri_cut_d, scale=1.2)
+        polygon(points=[
+            [-tri_cut_w/2, 0],
+            [tri_cut_w/2, 0],
+            [0, 1.3*tri_cut_w],
+        ]
+        );
 }
 
 
