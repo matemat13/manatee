@@ -1,5 +1,7 @@
 // modules for creating the main body of the Manatee
 
+include <parameters.scad>
+
 use <common_modules.scad>
 
 module cap(r, h, minw)
@@ -41,14 +43,14 @@ module cap(r, h, minw)
             }
             // a hole at the top for the docking collar
             translate([0,0,r/2])
-            cylinder(h=h/2, r=r_hatch, $fn=$fn/4);
+            cylinder(h=collar_outer_r, r=r_hatch, $fn=$fn);
         }
         
         // the docking collar itself
         collar_outer_r = r/2;
         lock_dots_r = r_hatch/10;
         // outer ring
-        translate([0,0,h-collar_outer_r+2*lock_dots_r])
+        translate([0,0,h-collar_outer_r+2.0*lock_dots_r])
         difference()
         {
             // the outer ring
@@ -113,7 +115,7 @@ module leg_attachment(h, r)
 }
 
 // the complete hull
-module hull(H, R, R_bottom, R_thousing, Z_leg_mounts, num_legs, cap_squash, minw)
+module hull()
 {
     h_bottom = 0.1*R_bottom;
     translate([0, 0, h_bottom])
@@ -131,3 +133,34 @@ module hull(H, R, R_bottom, R_thousing, Z_leg_mounts, num_legs, cap_squash, minw
         translate([R-1.04*R_legmount, 0, Z_leg_mounts])
         leg_attachment(H_legmount, R_legmount, $fn=50);
 }
+
+module main_hull()
+{
+    difference()
+    {
+        hull($fn=2*$fn);
+        
+        // triangle cutouts
+        tri_cut_w = 2*PI*R/15;
+        tri_cut_d = R/14;
+        for (it = [1 : 2*num_legs])
+            rotate([0, 0, it*360/num_legs/2])
+            translate([R_bottom-tri_cut_d, 0, 0])
+            rotate([101, 0, 90])
+            linear_extrude(2*tri_cut_d, scale=1.2)
+            polygon(points=[
+                [-tri_cut_w/2, 0],
+                [tri_cut_w/2, 0],
+                [0, 1.3*Z_leg_mounts],
+            ]
+            );
+        
+        // leg cutouts
+        for (it = [1 : num_legs])
+            rotate([0, 0, it*360/num_legs])
+            translate([R_bottom-(R_bottom-R_thousing)+R_leg, 0, 0])
+            cylinder(h=R_leg/2, r=R_leg);
+    }
+}
+
+main_hull();
