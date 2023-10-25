@@ -7,6 +7,18 @@ module toroid(R, r)
     circle(r = r);
 }
 
+module cubicoid(r, h)
+{
+    fn = 20;
+    w = 0.95;
+    rotate_extrude()
+    polygon(points=[
+        [0, 0],
+        for (it = [0:1:fn]) let (x = it/fn) [r-(w*x*x*x + (1-w)*x*x)*r, h*(it/fn)],
+        [0, h],
+    ]);
+}
+
 module paraboloid(h, r_bottom, r_top)
 {
     r1 = r_bottom;

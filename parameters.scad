@@ -1,13 +1,13 @@
 // user-defined parameters
-cap_squash = 0.05;
+cap_squash = 0.10;
 body_diameter = 37;
 body_bottom_diameter = 34;
-body_height = 36;
+body_height = 34;
 
 num_legs = 6;
 num_doors = 5; // should be lower or equal to the number of legs
 
-leg_mounts_z = 0.26*body_height;
+leg_mounts_z = 0.30*body_height;
 leg_height = 12.6;
 leg_length = 7;
 leg_cover_width = 4.2;

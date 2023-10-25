@@ -1,1 +1,4 @@
 *.stl
+
+# Vim swap files
+*.swp
